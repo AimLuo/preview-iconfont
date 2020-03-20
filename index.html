@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      header {
+        display: flex;
+      }
+      aside {
+        min-width: 450px;
+      }
+      header section {
+        flex: 1;
+      }
+      ul,
+      li {
+        list-style: none;
+      }
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        border: 4px dotted #000;
+      }
+      li {
+        width: 220px;
+        padding: 5px 0;
+        text-align: center;
+        border-radius: 5px;
+      }
+      li:hover {
+        background-color: #f7f7f7;
+      }
+      li .ft {
+        font-size: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <aside>
+        <span>http://at.alicdn.com/t/font_567566_pwc3oottzol.css</span>
+        <br />
+        <span>http://at.alicdn.com/t/font_1113798_0532l8oa6jqp.css</span>
+      </aside>
+      <section>
+        <textarea
+          name=""
+          id="cssUrls"
+          cols="120"
+          rows="10"
+          placeholder="多个地址请换行"
+          title="多个地址请换行"
+        ></textarea>
+        <input type="button" id="btn" value="预览" />
+      </section>
+    </header>
+    <main id="wrap"></main>
+    <script>
+      const cssUrls = document.getElementById('cssUrls');
+      const btn = document.getElementById('btn');
+      const $wrap = document.getElementById('wrap');
+      let ids = [];
+      async function cha() {
+        const cssUrlsArray = cssUrls.value.split('\n');
+        const res = await fetch(`/getCss?cssUrls=${cssUrlsArray.join(',')}`).then(response => response.json());
+        ids.forEach(id => {
+          document.getElementById(id).remove();
+        });
+        ids = [];
+        cssUrlsArray.forEach((url, index) => {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.id = 'alicss' + index;
+          ids.push(link.id);
+          link.href = url;
+          document.getElementsByTagName('head')[0].appendChild(link);
+        });
+        const dom = res
+          .map(
+            (zu, index) =>
+              `<h2><a href='${cssUrlsArray[index]}' >${cssUrlsArray[index]}</a></h2><ul>${zu
+                .map(icon => `<li><i class="ft iconfont ${icon}"></i><p>${icon}</p></li>`)
+                .join('')}</ul>`,
+          )
+          .join('');
+        $wrap.innerHTML = dom;
+      }
+      btn.onclick = cha;
+    </script>
+  </body>
+</html>

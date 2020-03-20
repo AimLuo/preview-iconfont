@@ -2,10 +2,6 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs');
 const qs = require('querystring');
-// 查看阿里图标库的图标
-// 执行node preview_iconList.js
-// 输入http://localhost:9000/?cssUrl=http://at.alicdn.com/t/font_567566_pwc3oottzol.css
-//后面的cssUrl为要预览的css iconfont
 
 const get = cssUrl =>
   new Promise(resolve => {
